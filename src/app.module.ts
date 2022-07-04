@@ -1,4 +1,15 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 
-@Module({})
+import { SharedModule } from './shared/shared.module';
+
+@Module({
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: '.env',
+    }),
+    SharedModule,
+  ],
+})
 export class AppModule {}
