@@ -5,6 +5,7 @@ import { AcceptLanguageResolver, I18nModule, QueryResolver } from 'nestjs-i18n';
 import path from 'path';
 
 import { AppController } from './app.controller';
+import { UserModule } from './modules/user/user.module';
 import { ApiConfigService } from './shared/services/api-config.service';
 import { SharedModule } from './shared/shared.module';
 
@@ -32,6 +33,7 @@ import { SharedModule } from './shared/shared.module';
       ],
     }),
     SharedModule,
+    UserModule,
   ],
   controllers: [AppController],
 })
