@@ -5,9 +5,9 @@ module.exports = {
     es6: true,
     node: true,
   },
-  ignorePatterns: ['.eslintrc.js'],
+  ignorePatterns: ['.eslintrc.js','src/database/**/*.ts'],
   parserOptions: {
-    ecmaVersion: 2018,
+    ecmaVersion: 2018 ,
     project: './tsconfig.eslint.json',
     sourceType: 'module',
   },

@@ -53,16 +53,12 @@ export class ApiConfigService {
   }
 
   get postgresConfig(): TypeOrmModuleOptions {
-    const entities = [
-      __dirname + '/../../modules/**/*.entity{.ts,.js}',
-      __dirname + '/../../modules/**/*.view-entity{.ts,.js}',
-    ];
+    const entities = [__dirname + '/../../modules/**/*.entity.{ts,js}'];
     const migrations = [__dirname + '/../../database/migrations/*{.ts,.js}'];
 
     return {
       entities,
       migrations,
-      keepConnectionAlive: !this.isTest,
       dropSchema: this.isTest,
       type: 'postgres',
       name: 'default',
