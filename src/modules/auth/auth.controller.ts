@@ -1,37 +1,30 @@
-import {
-  Body,
-  Controller,
-  HttpCode,
-  HttpStatus,
-  Post,
-  UploadedFile,
-} from '@nestjs/common';
-import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
+import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 
-import { ApiFile } from '../../decorators';
-import { IFile } from '../../interfaces';
-import { UserDto } from '../user/dtos/user.dto';
-import { UserService } from '../user/user.service';
-import { UserRegisterDto } from './dto/UserRegisterDto';
+import { userInfoSchema } from '../../common/validation-schemas/registration-input.schema';
+import { YupValidationPipe } from '../../pipes/yup-validation.pipe';
+import { AuthService } from './auth.service';
+import { UserRegisterDto } from './dtos/req/UserRegisterDto';
+import { TokenResponseDto } from './dtos/res/TokenResponseDto';
 
 @Controller('auth')
 @ApiTags('auth')
 export class AuthController {
-  constructor(private userService: UserService) {}
+  constructor(private authService: AuthService) {}
 
-  @Post('register')
+  @Post('registration')
   @HttpCode(HttpStatus.OK)
-  @ApiOkResponse({ type: UserDto, description: 'Successfully Registered' })
-  @ApiFile({ name: 'avatar' })
-  async userRegister(
-    @Body() userRegisterDto: UserRegisterDto,
-
-    @UploadedFile() file: IFile,
-  ): Promise<UserDto> {
-    const createdUser = await this.userService.createUser(userRegisterDto);
-    // eslint-disable-next-line no-console
-    console.log(file);
-
-    return createdUser;
+  @ApiOperation({ summary: 'User registration' })
+  @ApiOkResponse({
+    type: TokenResponseDto,
+    description: 'Successfully Registered',
+  })
+  // @ApiFile({ name: 'avatar' })
+  registration(
+    @Body(new YupValidationPipe(userInfoSchema))
+    userRegisterDto: UserRegisterDto,
+    // @UploadedFile() file: IFile,
+  ): Promise<TokenResponseDto> {
+    return this.authService.registration(userRegisterDto);
   }
 }

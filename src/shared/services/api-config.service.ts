@@ -83,6 +83,13 @@ export class ApiConfigService {
     };
   }
 
+  get authConfig() {
+    return {
+      jwtSecret: this.getString('JWT_SECRET'),
+      jwtExpiresIn: this.getString('JWT_EXPIRES_IN'),
+    };
+  }
+
   private get(key: string): string {
     const value = this.configService.get<string>(key);
 

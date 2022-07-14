@@ -1,8 +1,4 @@
-import {
-  ClassSerializerInterceptor,
-  Logger,
-  ValidationPipe,
-} from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
 import { NestFactory, Reflector } from '@nestjs/core';
 import compression from 'compression';
 import express from 'express';
@@ -12,7 +8,6 @@ import morgan from 'morgan';
 import path from 'path';
 
 import { AppModule } from './app.module';
-import { HttpExceptionFilter } from './filters/bad-request.filter';
 import { QueryFailedFilter } from './filters/query-failed.filter';
 import { setupSwagger } from './setup-swagger';
 import { ApiConfigService } from './shared/services/api-config.service';
@@ -23,6 +18,7 @@ async function bootstrap(): Promise<void> {
 
   const app = await NestFactory.create(AppModule);
 
+  app.enableCors();
   app.use(helmet());
   app.use(morgan('combined'));
   app.use(compression());
@@ -35,14 +31,7 @@ async function bootstrap(): Promise<void> {
   app.enableVersioning();
 
   const reflector = app.get(Reflector);
-
-  app.useGlobalFilters(
-    new HttpExceptionFilter(reflector),
-    new QueryFailedFilter(reflector),
-  );
-
-  app.useGlobalInterceptors(new ClassSerializerInterceptor(reflector));
-
+  app.useGlobalFilters(new QueryFailedFilter(reflector));
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
