@@ -1,10 +1,10 @@
 import { object, string } from 'yup';
 
-export const userInfoSchema = object({
-  first_name: string()
+export const registrationSchema = object({
+  firstName: string()
     .required('general.required')
     .max(40, 'user.firstNameTooLong'),
-  last_name: string()
+  lastName: string()
     .required('general.required')
     .max(40, 'user.lastNameTooLong'),
   email: string() // check for empty string

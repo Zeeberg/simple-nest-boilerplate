@@ -1,11 +1,20 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { hash } from 'bcryptjs';
+import { compare, hash } from 'bcryptjs';
 
+import type { Optional } from '../../types';
 import type { UserEntity } from '../user/user.entity';
 import { UserService } from '../user/user.service';
+import type { UserAuthDto } from './dtos/req/UserAuthDto';
 import type { UserRegisterDto } from './dtos/req/UserRegisterDto';
 import type { TokenResponseDto } from './dtos/res/TokenResponseDto';
+import { UserAuthResponseDto } from './dtos/res/UserAuthResponseDto';
 import type { IAuthPayload } from './types/types/AuthPayloadInterface';
 
 @Injectable()
@@ -15,18 +24,34 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
+  async validateUser(userAuthDto: UserAuthDto): Promise<UserEntity> {
+    const user = await this.userService.getUserByEmail(userAuthDto.email);
+
+    if (!user) {
+      throw new NotFoundException('auth.userNotFound');
+    }
+
+    const passwordEquals = await compare(
+      String(userAuthDto.password),
+      user.password,
+    );
+
+    if (!passwordEquals) {
+      throw new UnauthorizedException('auth.wrongPasswordOrEmail');
+    }
+
+    return user;
+  }
+
   async registration(
     userRegisterDto: UserRegisterDto,
-  ): Promise<TokenResponseDto> {
+  ): Promise<UserAuthResponseDto> {
     const candidate = await this.userService.getUserByEmail(
       userRegisterDto.email,
     );
 
     if (candidate) {
-      throw new HttpException(
-        'Пользователь с таким email уже существует',
-        HttpStatus.BAD_REQUEST,
-      );
+      throw new HttpException('auth.userExists', HttpStatus.BAD_REQUEST);
     }
 
     const hashPassword = await hash(userRegisterDto.password, 5);
@@ -37,17 +62,21 @@ export class AuthService {
     });
 
     // TODO: add mail verification
-    return this.generateToken(user);
+    return new UserAuthResponseDto(user.toDto(), this.generateToken(user));
   }
 
-  private generateToken(user: UserEntity): TokenResponseDto {
+  generateToken(user: Optional<UserEntity>): TokenResponseDto {
+    if (!user) {
+      throw new NotFoundException('auth.userNotFound');
+    }
+
     const payload: IAuthPayload = {
       email: user.email,
       id: user.id,
     };
 
     return {
-      token: this.jwtService.sign(payload),
+      accessToken: this.jwtService.sign(payload),
     };
   }
 }

@@ -2,10 +2,12 @@ import { Column, Entity, JoinColumn, OneToOne } from 'typeorm';
 
 import type { IAbstractEntity } from '../../common/abstract.entity';
 import { AbstractEntity } from '../../common/abstract.entity';
+import { UseDto } from '../../decorators/use-dto.decorator';
+import { UserDto } from './dtos/user.dto';
 import type { IUserEntity } from './user.entity';
 import { UserEntity } from './user.entity';
 
-export interface IUserSettingsEntity extends IAbstractEntity {
+export interface IUserSettingsEntity extends IAbstractEntity<UserDto> {
   isEmailVerified?: boolean;
 
   isPhoneVerified?: boolean;
@@ -14,6 +16,7 @@ export interface IUserSettingsEntity extends IAbstractEntity {
 }
 
 @Entity({ name: 'user_settings' })
+@UseDto(UserDto)
 export class UserSettingsEntity
   extends AbstractEntity
   implements IUserSettingsEntity
