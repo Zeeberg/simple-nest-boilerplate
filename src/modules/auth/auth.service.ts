@@ -24,6 +24,14 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
+  async login(userAuthDto: UserAuthDto): Promise<UserAuthResponseDto> {
+    const userEntity = await this.validateUser(userAuthDto);
+
+    const token = this.generateToken(userEntity);
+
+    return new UserAuthResponseDto(userEntity.toDto(), token);
+  }
+
   async validateUser(userAuthDto: UserAuthDto): Promise<UserEntity> {
     const user = await this.userService.getUserByEmail(userAuthDto.email);
 

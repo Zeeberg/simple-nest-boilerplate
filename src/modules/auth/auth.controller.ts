@@ -21,15 +21,11 @@ export class AuthController {
     type: UserAuthResponseDto,
     description: 'Successfully Authorized',
   })
-  async login(
+  login(
     @Body(new YupValidationPipe(authorizationSchema))
     userAuthDto: UserAuthDto,
   ): Promise<UserAuthResponseDto> {
-    const userEntity = await this.authService.validateUser(userAuthDto);
-
-    const token = this.authService.generateToken(userEntity);
-
-    return new UserAuthResponseDto(userEntity.toDto(), token);
+    return this.authService.login(userAuthDto);
   }
 
   @Post('registration')
