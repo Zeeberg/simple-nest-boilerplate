@@ -1,5 +1,5 @@
 import { Logger, ValidationPipe } from '@nestjs/common';
-import { NestFactory, Reflector } from '@nestjs/core';
+import { NestFactory } from '@nestjs/core';
 import compression from 'compression';
 import express from 'express';
 import rateLimit from 'express-rate-limit';
@@ -8,7 +8,6 @@ import morgan from 'morgan';
 import path from 'path';
 
 import { AppModule } from './app.module';
-import { QueryFailedFilter } from './filters/query-failed.filter';
 import { setupSwagger } from './setup-swagger';
 import { ApiConfigService } from './shared/services/api-config.service';
 import { SharedModule } from './shared/shared.module';
@@ -30,8 +29,6 @@ async function bootstrap(): Promise<void> {
   );
   app.enableVersioning();
 
-  const reflector = app.get(Reflector);
-  app.useGlobalFilters(new QueryFailedFilter(reflector));
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,

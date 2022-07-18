@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import type { FindOneOptions } from 'typeorm';
+import type { FindOptionsWhere } from 'typeorm';
 
 import type { Nullable } from '../../types';
 import type { UserRegisterDto } from '../auth/dtos/req/UserRegisterDto';
@@ -26,9 +26,11 @@ export class UserService {
   }
 
   async findOne(
-    findData: FindOneOptions<UserEntity>,
+    findData:
+      | FindOptionsWhere<UserEntity>
+      | Array<FindOptionsWhere<UserEntity>>,
   ): Promise<Nullable<UserEntity>> {
-    const user = await this.userRepository.findOne(findData);
+    const user = await this.userRepository.findOneBy(findData);
 
     return user;
   }
