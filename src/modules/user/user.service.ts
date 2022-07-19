@@ -3,6 +3,8 @@ import type { FindOptionsWhere } from 'typeorm';
 
 import type { Nullable } from '../../types';
 import type { UserRegisterDto } from '../auth/dtos/req/UserRegisterDto';
+import type { UserDto } from './dtos/user.dto';
+import type { GetUsersFilter } from './types/get-users.filter';
 import type { UserEntity } from './user.entity';
 import { UserRepository } from './user.repository';
 
@@ -33,5 +35,11 @@ export class UserService {
     const user = await this.userRepository.findOneBy(findData);
 
     return user;
+  }
+
+  async getUsers(filter: GetUsersFilter): Promise<Nullable<UserDto[]>> {
+    const users = await this.userRepository.getUsers(filter);
+
+    return users.map((user) => user.toDto());
   }
 }
