@@ -3,7 +3,7 @@ import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { getUsersSchema } from '../../common/validation-schemas/get-users-input.schema';
 import { RoleType } from '../../constants';
-import { Auth } from '../../decorators/http.decorators';
+import { Auth, UUIDParam } from '../../decorators/http.decorators';
 import { YupValidationPipe } from '../../pipes/yup-validation.pipe';
 import type { Nullable } from '../../types';
 import { UserDto } from './dtos/user.dto';
@@ -13,16 +13,25 @@ import { UserService } from './user.service';
 @ApiTags('Users')
 @Controller('user')
 export class UserController {
-  constructor(private usersService: UserService) {}
+  constructor(private userService: UserService) {}
 
   @Get()
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Get all users' })
   @Auth([RoleType.USER, RoleType.ADMIN])
-  @ApiOkResponse({ type: UserDto, description: 'user info' })
+  @ApiOkResponse({ type: UserDto, description: 'Users info' })
   getUsers(
     @Query(new YupValidationPipe(getUsersSchema)) filter: GetUsersFilter,
   ): Promise<Nullable<UserDto[]>> {
-    return this.usersService.getUsers(filter);
+    return this.userService.getUsers(filter);
+  }
+
+  @Get(':id')
+  @Auth([RoleType.USER])
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Get user info by id' })
+  @ApiOkResponse({ description: 'User info', type: UserDto })
+  getUserById(@UUIDParam('id') userId: string): Promise<UserDto> {
+    return this.userService.getUserById(userId);
   }
 }

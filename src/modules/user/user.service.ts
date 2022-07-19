@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import type { FindOptionsWhere } from 'typeorm';
 
 import type { Nullable } from '../../types';
@@ -25,6 +25,18 @@ export class UserService {
     });
 
     return user;
+  }
+
+  async getUserById(userId: string): Promise<UserDto> {
+    const user = await this.findOne({
+      id: userId,
+    });
+
+    if (!user) {
+      throw new NotFoundException('user.NotFound');
+    }
+
+    return user?.toDto();
   }
 
   async findOne(

@@ -29,6 +29,9 @@ async function bootstrap(): Promise<void> {
   );
   app.enableVersioning();
 
+  //const reflector = app.get(Reflector);
+
+  //app.useGlobalFilters(new QueryFailedFilter(reflector));
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,

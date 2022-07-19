@@ -1,4 +1,11 @@
-import { applyDecorators, SetMetadata, UseGuards } from '@nestjs/common';
+import type { PipeTransform, Type } from '@nestjs/common';
+import {
+  applyDecorators,
+  Param,
+  ParseUUIDPipe,
+  SetMetadata,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiBearerAuth, ApiUnauthorizedResponse } from '@nestjs/swagger';
 
 import type { RoleType } from '../constants';
@@ -12,4 +19,11 @@ export function Auth(roles: RoleType[] = []): MethodDecorator {
     ApiBearerAuth(),
     ApiUnauthorizedResponse({ description: 'Unauthorized' }),
   );
+}
+
+export function UUIDParam(
+  property: string,
+  ...pipes: Array<Type<PipeTransform> | PipeTransform>
+): ParameterDecorator {
+  return Param(property, new ParseUUIDPipe({ version: '4' }), ...pipes);
 }

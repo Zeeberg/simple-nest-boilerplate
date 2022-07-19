@@ -7,7 +7,7 @@ export const registrationSchema = object({
   lastName: string()
     .required('general.required')
     .max(40, 'user.lastNameTooLong'),
-  email: string() // check for empty string
+  email: string()
     .required('general.required')
     .email('general.invalidEmail')
     .lowercase('general.mustBeLowerCase'),
