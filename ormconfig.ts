@@ -1,6 +1,11 @@
+import { config } from 'dotenv';
+import { DataSource } from 'typeorm';
+
 import { SnakeNamingStrategy } from './src/snake-naming.strategy';
 
-const configs = {
+config();
+// eslint-disable-next-line @typescript-eslint/naming-convention
+export const connectionSource = new DataSource({
   type: 'postgres',
   host: process.env.DB_HOST,
   port: Number(process.env.DB_PORT),
@@ -13,6 +18,4 @@ const configs = {
     'src/modules/**/*.view-entity{.ts,.js}',
   ],
   migrations: ['src/database/migrations/*{.ts,.js}'],
-};
-
-module.exports = configs;
+});

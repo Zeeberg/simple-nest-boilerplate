@@ -27,7 +27,7 @@ export class UserController {
   }
 
   @Get(':id')
-  @Auth([RoleType.USER])
+  @Auth([RoleType.USER, RoleType.ADMIN])
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Get user info by id' })
   @ApiOkResponse({ description: 'User info', type: UserDto })

@@ -22,7 +22,7 @@ import { UserRegisterDto } from './dtos/req/UserRegisterDto';
 import { UserAuthResponseDto } from './dtos/res/UserAuthResponseDto';
 
 @Controller('auth')
-@ApiTags('auth')
+@ApiTags('Auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
 

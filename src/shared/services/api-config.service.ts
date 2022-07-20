@@ -36,6 +36,10 @@ export class ApiConfigService {
     return this.getBoolean('ENABLE_DOCUMENTATION');
   }
 
+  get serverUrl(): string {
+    return this.getString('SERVER_URL');
+  }
+
   private getBoolean(key: string): boolean {
     const value = this.get(key);
 
@@ -87,6 +91,16 @@ export class ApiConfigService {
     return {
       jwtSecret: this.getString('JWT_SECRET'),
       jwtExpiresIn: this.getString('JWT_EXPIRES_IN'),
+    };
+  }
+
+  get uploadConfig() {
+    return {
+      uploadDirectory: this.getString('UPLOAD_DIRECTORY'),
+      fileNameLength: this.getNumber('UPLOAD_FILE_NAME_LENGTH'),
+      fileNameCharacters: this.getString('UPLOAD_FILE_NAME_CHARACTERS'),
+      maxFileSize: this.getNumber('UPLOAD_MAX_FILE_SIZE'),
+      allowedFileExtensions: this.getString('UPLOAD_ALLOWED_FILE_EXTENSIONS'),
     };
   }
 

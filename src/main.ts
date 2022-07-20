@@ -7,7 +7,7 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 import path from 'path';
 
-import { AppModule } from './app.module';
+import { AppModule } from './modules/app/app.module';
 import { setupSwagger } from './setup-swagger';
 import { ApiConfigService } from './shared/services/api-config.service';
 import { SharedModule } from './shared/shared.module';
@@ -51,7 +51,7 @@ async function bootstrap(): Promise<void> {
   }
 
   try {
-    await app.listen(3000);
+    await app.listen(configService.appConfig.port);
     logger.debug(`Server running on ${await app.getUrl()}`);
   } catch (error) {
     logger.error(`Application starting failed: ${JSON.stringify(error)}`);

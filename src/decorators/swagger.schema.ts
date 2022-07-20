@@ -6,7 +6,7 @@ import {
   ROUTE_ARGS_METADATA,
 } from '@nestjs/common/constants';
 import { RouteParamtypes } from '@nestjs/common/enums/route-paramtypes.enum';
-import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
+import { FilesInterceptor } from '@nestjs/platform-express';
 import {
   ApiBody,
   ApiConsumes,
@@ -20,6 +20,7 @@ import type {
 import { reverseObjectKeys } from '@nestjs/swagger/dist/utils/reverse-object-keys.util';
 import _ from 'lodash';
 
+import { fileInterceptor } from '../interceptors/file.interceptor';
 import type { IApiFile } from '../interfaces';
 
 function explore(instance: Object, propertyKey: string | symbol) {
@@ -116,7 +117,7 @@ export function ApiFile(
   const apiFileInterceptors = filesArray.map((file) =>
     file.isArray
       ? UseInterceptors(FilesInterceptor(file.name))
-      : UseInterceptors(FileInterceptor(file.name)),
+      : UseInterceptors(fileInterceptor(file)),
   );
 
   return applyDecorators(
