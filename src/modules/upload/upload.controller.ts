@@ -11,6 +11,7 @@ import { Express } from 'express';
 import { RoleType } from '../../constants';
 import { ApiFile } from '../../decorators';
 import { Auth } from '../../decorators/http.decorators';
+import { ParseFile } from '../../pipes/parse-file.pipe';
 import { UploadFileResponseDto } from './dtos/res/UploadFileResponseDto';
 import { UploadService } from './upload.service';
 
@@ -26,7 +27,7 @@ export class UploadController {
   @ApiOkResponse({ description: 'Uploaded file', type: UploadFileResponseDto })
   @ApiFile({ name: 'file' })
   uploadFile(
-    @UploadedFile() file: Express.Multer.File,
+    @UploadedFile(ParseFile) file: Express.Multer.File,
   ): Promise<UploadFileResponseDto> {
     return this.uploadService.getUploadedFileInfo(file);
   }
