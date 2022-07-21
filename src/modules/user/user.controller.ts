@@ -17,7 +17,9 @@ export class UserController {
 
   @Get()
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'Get all users' })
+  @ApiOperation({
+    summary: 'Get all users',
+  })
   @Auth([RoleType.USER, RoleType.ADMIN])
   @ApiOkResponse({ type: UserDto, description: 'Users info' })
   getUsers(

@@ -37,7 +37,7 @@ export class UploadController {
   @Auth([RoleType.USER, RoleType.ADMIN])
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Upload files' })
-  @ApiOkResponse({ description: 'Uploaded files' })
+  @ApiOkResponse({ description: 'Uploaded files', type: UploadFileResponseDto })
   @ApiFile({ name: 'files', isArray: true })
   uploadFiles(
     @UploadedFiles(ParseFile) files: Express.Multer.File[],
