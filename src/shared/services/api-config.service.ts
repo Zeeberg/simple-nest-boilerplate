@@ -101,6 +101,7 @@ export class ApiConfigService {
       fileNameCharacters: this.getString('UPLOAD_FILE_NAME_CHARACTERS'),
       maxFileSize: this.getNumber('UPLOAD_MAX_FILE_SIZE'),
       allowedFileExtensions: this.getString('UPLOAD_ALLOWED_FILE_EXTENSIONS'),
+      maxFilesToUpload: this.getNumber('UPLOAD_MAX_FILES_TO_UPLOAD'),
     };
   }
 

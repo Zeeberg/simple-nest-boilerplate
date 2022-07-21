@@ -6,7 +6,6 @@ import {
   ROUTE_ARGS_METADATA,
 } from '@nestjs/common/constants';
 import { RouteParamtypes } from '@nestjs/common/enums/route-paramtypes.enum';
-import { FilesInterceptor } from '@nestjs/platform-express';
 import {
   ApiBody,
   ApiConsumes,
@@ -21,6 +20,7 @@ import { reverseObjectKeys } from '@nestjs/swagger/dist/utils/reverse-object-key
 import _ from 'lodash';
 
 import { fileInterceptor } from '../interceptors/file.interceptor';
+import { filesInterceptor } from '../interceptors/files.interceptor';
 import type { IApiFile } from '../interfaces';
 
 function explore(instance: Object, propertyKey: string | symbol) {
@@ -116,7 +116,7 @@ export function ApiFile(
   const filesArray = _.castArray(files);
   const apiFileInterceptors = filesArray.map((file) =>
     file.isArray
-      ? UseInterceptors(FilesInterceptor(file.name))
+      ? UseInterceptors(filesInterceptor(file))
       : UseInterceptors(fileInterceptor(file)),
   );
 

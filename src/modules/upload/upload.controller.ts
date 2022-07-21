@@ -4,6 +4,7 @@ import {
   HttpStatus,
   Post,
   UploadedFile,
+  UploadedFiles,
 } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Express } from 'express';
@@ -32,11 +33,15 @@ export class UploadController {
     return this.uploadService.getUploadedFileInfo(file);
   }
 
-  // @Post('files')
-  // @Auth([RoleType.USER, RoleType.ADMIN])
-  // @HttpCode(HttpStatus.OK)
-  // @ApiOperation({ summary: 'Upload files' })
-  // @ApiOkResponse({ description: 'Uploaded files' })
-  // @ApiFile({ name: 'file', isArray: true })
-  // uploadFiles(@UploadedFiles() files: Express.Multer.File[]) {}
+  @Post('files')
+  @Auth([RoleType.USER, RoleType.ADMIN])
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Upload files' })
+  @ApiOkResponse({ description: 'Uploaded files' })
+  @ApiFile({ name: 'files', isArray: true })
+  uploadFiles(
+    @UploadedFiles(ParseFile) files: Express.Multer.File[],
+  ): Promise<UploadFileResponseDto[]> {
+    return this.uploadService.getUploadedFilesInfo(files);
+  }
 }

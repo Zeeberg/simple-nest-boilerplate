@@ -14,7 +14,10 @@ import { UploadRepository } from '../modules/upload/upload.repository';
 import { ApiConfigService } from '../shared/services/api-config.service';
 import { CodeGeneratorService } from '../shared/services/code-generator.service';
 
-export function fileInterceptor(apiFile: IApiFile): Type<NestInterceptor> {
+export function fileInterceptor(
+  apiFile: IApiFile,
+  filesLimit?: number,
+): Type<NestInterceptor> {
   @Injectable()
   class Interceptor implements NestInterceptor {
     constructor(
@@ -34,7 +37,7 @@ export function fileInterceptor(apiFile: IApiFile): Type<NestInterceptor> {
     intercept(context: ExecutionContext, next: CallHandler) {
       const fileIntConst = NestFileInterceptor(apiFile.name, {
         limits: {
-          files: 1,
+          files: filesLimit,
           fileSize: this.configService.uploadConfig.maxFileSize,
         },
         fileFilter: (_request, file, callback) => {
