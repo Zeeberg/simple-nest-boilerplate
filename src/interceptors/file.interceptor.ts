@@ -64,16 +64,15 @@ export function fileInterceptor(
         },
         storage: diskStorage({
           destination: this.configService.uploadConfig.uploadDirectory,
-          filename: (request, file, callback) => {
+          // eslint-disable-next-line @typescript-eslint/no-misused-promises
+          filename: async (request, file, callback) => {
             const name =
               this.codeGeneratorService.generateCode(
                 this.configService.uploadConfig.fileNameLength,
                 this.configService.uploadConfig.fileNameCharacters,
               ) + path.extname(file.originalname);
 
-            void (async () => {
-              await this.insertToRepository(file, name);
-            })();
+            await this.insertToRepository(file, name);
 
             // eslint-disable-next-line unicorn/no-null
             callback(null, name);
