@@ -17,9 +17,9 @@ import { YupValidationPipe } from '../../pipes/yup-validation.pipe';
 import { UserDto } from '../user/dtos/user.dto';
 import { UserEntity } from '../user/user.entity';
 import { AuthService } from './auth.service';
-import { UserAuthDto } from './dtos/req/UserAuthDto';
-import { UserRegisterDto } from './dtos/req/UserRegisterDto';
-import { UserAuthResponseDto } from './dtos/res/UserAuthResponseDto';
+import { UserAuthDto } from './dtos/req/user-auth.dto';
+import { UserRegisterDto } from './dtos/req/user-register.dto';
+import { UserAuthResponseDto } from './dtos/res/user-auth-response.dto';
 
 @Controller('auth')
 @ApiTags('Auth')

@@ -11,10 +11,10 @@ import { compare, hash } from 'bcryptjs';
 import type { Optional } from '../../types';
 import type { UserEntity } from '../user/user.entity';
 import { UserService } from '../user/user.service';
-import type { UserAuthDto } from './dtos/req/UserAuthDto';
-import type { UserRegisterDto } from './dtos/req/UserRegisterDto';
-import type { TokenResponseDto } from './dtos/res/TokenResponseDto';
-import { UserAuthResponseDto } from './dtos/res/UserAuthResponseDto';
+import type { UserAuthDto } from './dtos/req/user-auth.dto';
+import type { UserRegisterDto } from './dtos/req/user-register.dto';
+import type { TokenResponseDto } from './dtos/res/token-response.dto';
+import { UserAuthResponseDto } from './dtos/res/user-auth-response.dto';
 import type { IAuthPayload } from './types/types/AuthPayloadInterface';
 
 @Injectable()

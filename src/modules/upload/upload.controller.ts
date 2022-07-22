@@ -13,7 +13,7 @@ import { RoleType } from '../../constants';
 import { ApiFile } from '../../decorators';
 import { Auth } from '../../decorators/http.decorators';
 import { ParseFile } from '../../pipes/parse-file.pipe';
-import { UploadFileResponseDto } from './dtos/res/UploadFileResponseDto';
+import { UploadFileResponseDto } from './dtos/res/upload-file-response.dto';
 import { UploadService } from './upload.service';
 
 @ApiTags('Upload')

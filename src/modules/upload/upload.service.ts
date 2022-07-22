@@ -4,7 +4,7 @@ import { In } from 'typeorm';
 
 import { ApiConfigService } from '../../shared/services/api-config.service';
 import type { Nullable } from '../../types';
-import { UploadFileResponseDto } from './dtos/res/UploadFileResponseDto';
+import { UploadFileResponseDto } from './dtos/res/upload-file-response.dto';
 import type { UploadEntity } from './upload.entity';
 import { UploadRepository } from './upload.repository';
 

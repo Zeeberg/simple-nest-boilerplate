@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import type { FindOptionsWhere } from 'typeorm';
 
 import type { Nullable } from '../../types';
-import type { UserRegisterDto } from '../auth/dtos/req/UserRegisterDto';
+import type { UserRegisterDto } from '../auth/dtos/req/user-register.dto';
 import type { UserDto } from './dtos/user.dto';
 import type { GetUsersFilter } from './types/get-users.filter';
 import type { UserEntity } from './user.entity';
