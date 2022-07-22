@@ -48,7 +48,17 @@ Routes is following REST standard (Richardson level 3)
 </p>
 </details>`,
     )
-    .addBearerAuth();
+    .addBearerAuth(
+      {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+        name: 'JWT',
+        description: 'Enter JWT token',
+        in: 'header',
+      },
+      'JWT-auth',
+    );
 
   if (process.env.API_VERSION) {
     documentBuilder.setVersion(process.env.API_VERSION);
