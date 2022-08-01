@@ -28,7 +28,7 @@ export function Auth(
   return applyDecorators(
     SetMetadata('roles', roles),
     UseGuards(AuthGuard(), RolesGuard),
-    ApiBearerAuth(),
+    ApiBearerAuth('JWT-auth'),
     ApiOperation({
       summary: `${summary} 🔒 Roles: ${additionSummaryRoles}`,
     }),

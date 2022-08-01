@@ -9,6 +9,8 @@ import { FilesInterceptor as NestFilesInterceptor } from '@nestjs/platform-expre
 import { diskStorage } from 'multer';
 import path from 'path';
 
+import { UploadType } from '../common/types';
+import { UploadFormats } from '../common/types/upload-formats.enum';
 import type { IApiFile } from '../interfaces';
 import { UploadRepository } from '../modules/upload/upload.repository';
 import { ApiConfigService } from '../shared/services/api-config.service';
@@ -27,6 +29,7 @@ export function filesInterceptor(apiFile: IApiFile): Type<NestInterceptor> {
       const upload = this.uploadRepository.create({
         fileName: name,
         mimeType: file.mimetype,
+        type: UploadType[file.fieldname],
       });
       await upload.save();
     }
@@ -41,15 +44,17 @@ export function filesInterceptor(apiFile: IApiFile): Type<NestInterceptor> {
           },
           fileFilter: (_request, file, callback) => {
             const extension = path.extname(file.originalname);
-            const allowedFiles =
-              this.configService.uploadConfig.allowedFileExtensions
-                .split(',')
-                .map((index) => index.trim());
 
-            if (!allowedFiles.includes(extension)) {
+            const allowedFilesString = UploadFormats[file.fieldname];
+
+            const allowedFiles = allowedFilesString
+              .split(',')
+              .map((index) => index.trim());
+
+            if (!allowedFiles.includes(extension.toLowerCase())) {
               callback(
                 new HttpException(
-                  'upload.unsupportedFileType',
+                  `${file.fieldname}.unsupportedFileType`,
                   HttpStatus.BAD_REQUEST,
                 ),
                 false,

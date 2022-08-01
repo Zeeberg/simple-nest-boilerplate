@@ -20,8 +20,10 @@ import { reverseObjectKeys } from '@nestjs/swagger/dist/utils/reverse-object-key
 import _ from 'lodash';
 
 import { fileInterceptor } from '../interceptors/file.interceptor';
+import { fileFiledsInterceptor } from '../interceptors/file-fields.interceptor';
 import { filesInterceptor } from '../interceptors/files.interceptor';
 import type { IApiFile } from '../interfaces';
+import type { IApiFiles } from '../interfaces/IApiFiles';
 
 function explore(instance: Object, propertyKey: string | symbol) {
   const types: Array<Type<unknown>> = Reflect.getMetadata(
@@ -111,7 +113,9 @@ function ApiFileDecorator(
 
 export function ApiFile(
   files: _.Many<IApiFile>,
-  options: Partial<{ isRequired: boolean }> = {},
+  options: Partial<{
+    isRequired: boolean;
+  }> = {},
 ): MethodDecorator {
   const filesArray = _.castArray(files);
   const apiFileInterceptors = filesArray.map((file) =>
@@ -125,5 +129,19 @@ export function ApiFile(
     ApiConsumes('multipart/form-data'),
     ApiFileDecorator(filesArray, options),
     ...apiFileInterceptors,
+  );
+}
+
+export function ApiFiles(
+  files: IApiFiles[],
+  options: Partial<{
+    isRequired: boolean;
+  }> = {},
+): MethodDecorator {
+  return applyDecorators(
+    RegisterModels(),
+    ApiConsumes('multipart/form-data'),
+    ApiFileDecorator(files, options),
+    UseInterceptors(fileFiledsInterceptor(files)),
   );
 }

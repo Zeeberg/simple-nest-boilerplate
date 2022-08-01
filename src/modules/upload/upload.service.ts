@@ -61,6 +61,37 @@ export class UploadService {
     return res;
   }
 
+  async getUploadedFileFieldsInfo(files: {
+    COMMON?: Express.Multer.File[];
+    AVATAR?: Express.Multer.File[];
+  }): Promise<UploadFileResponseDto[]> {
+    const fileNames: string[] = [];
+
+    for (const filesArr of Object.values(files)) {
+      for (const file of filesArr) {
+        fileNames.push(file.filename);
+      }
+    }
+
+    const [foundFiles, filesCount] = await this.uploadRepository.findAndCount({
+      where: { fileName: In(fileNames) },
+    });
+
+    if (filesCount !== fileNames.length) {
+      throw new NotFoundException('upload.someFilesNotFound');
+    }
+
+    // FIXME
+    // eslint-disable-next-line sonarjs/no-identical-functions
+    const res = foundFiles.map((file) => {
+      const url = this.createUrl(file);
+
+      return new UploadFileResponseDto(file.toDto(), url);
+    });
+
+    return res;
+  }
+
   async findOne(
     findData:
       | FindOptionsWhere<UploadEntity>

@@ -5,18 +5,20 @@ import type {
   Type,
 } from '@nestjs/common';
 import { HttpException, HttpStatus, Injectable, mixin } from '@nestjs/common';
-import { FileInterceptor as NestFileInterceptor } from '@nestjs/platform-express';
+import { FileFieldsInterceptor as NestFileFieldsInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import path from 'path';
 
 import { UploadType } from '../common/types';
 import { UploadFormats } from '../common/types/upload-formats.enum';
-import type { IApiFile } from '../interfaces';
+import type { IApiFiles } from '../interfaces/IApiFiles';
 import { UploadRepository } from '../modules/upload/upload.repository';
 import { ApiConfigService } from '../shared/services/api-config.service';
 import { CodeGeneratorService } from '../shared/services/code-generator.service';
 
-export function fileInterceptor(apiFile: IApiFile): Type<NestInterceptor> {
+export function fileFiledsInterceptor(
+  apiFiles: IApiFiles[],
+): Type<NestInterceptor> {
   @Injectable()
   class Interceptor implements NestInterceptor {
     constructor(
@@ -35,9 +37,8 @@ export function fileInterceptor(apiFile: IApiFile): Type<NestInterceptor> {
     }
 
     intercept(context: ExecutionContext, next: CallHandler) {
-      const fileIntConst = NestFileInterceptor(apiFile.name, {
+      const fileIntConst = NestFileFieldsInterceptor(apiFiles, {
         limits: {
-          files: 1,
           fileSize: this.configService.uploadConfig.maxFileSize,
         },
         fileFilter: (_request, file, callback) => {
@@ -49,7 +50,7 @@ export function fileInterceptor(apiFile: IApiFile): Type<NestInterceptor> {
             .split(',')
             .map((index) => index.trim());
 
-          if (!allowedFiles.includes(extension)) {
+          if (!allowedFiles.includes(extension.toLowerCase())) {
             callback(
               new HttpException(
                 `${file.fieldname}.unsupportedFileType`,
