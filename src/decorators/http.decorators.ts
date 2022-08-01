@@ -6,17 +6,32 @@ import {
   SetMetadata,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiUnauthorizedResponse } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
 
 import type { RoleType } from '../constants';
+import { RoleTypeSwagger } from '../constants/role-type-swagger';
 import { AuthGuard } from '../guards/auth.guard';
 import { RolesGuard } from '../guards/roles.guard';
 
-export function Auth(roles: RoleType[] = []): MethodDecorator {
+export function Auth(
+  roles: RoleType[] = [],
+  summary?: string,
+): MethodDecorator {
+  const additionSummaryRoles = roles
+    .map((role) => RoleTypeSwagger[role])
+    .join(' | ');
+
   return applyDecorators(
     SetMetadata('roles', roles),
     UseGuards(AuthGuard(), RolesGuard),
     ApiBearerAuth(),
+    ApiOperation({
+      summary: `${summary} 🔒 Roles: ${additionSummaryRoles}`,
+    }),
     ApiUnauthorizedResponse({ description: 'Unauthorized' }),
   );
 }

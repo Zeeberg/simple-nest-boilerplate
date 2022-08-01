@@ -17,10 +17,7 @@ export class UserController {
 
   @Get()
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({
-    summary: 'Get all users',
-  })
-  @Auth([RoleType.USER, RoleType.ADMIN])
+  @Auth([RoleType.USER, RoleType.ADMIN], 'Get all users')
   @ApiOkResponse({ type: UserDto, description: 'Users info' })
   getUsers(
     @Query(new YupValidationPipe(getUsersSchema)) filter: GetUsersFilter,
@@ -29,9 +26,9 @@ export class UserController {
   }
 
   @Get(':id')
-  @Auth([RoleType.USER, RoleType.ADMIN])
+  @Auth([RoleType.USER, RoleType.ADMIN], 'Get user info by id')
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'Get user info by id' })
+  @ApiOperation({ summary: '' })
   @ApiOkResponse({ description: 'User info', type: UserDto })
   getUserById(@UUIDParam('id') userId: string): Promise<UserDto> {
     return this.userService.getUserById(userId);

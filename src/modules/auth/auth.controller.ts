@@ -47,19 +47,16 @@ export class AuthController {
     type: UserAuthResponseDto,
     description: 'Successfully Registered',
   })
-  // @ApiFile({ name: 'avatar' })
   registration(
     @Body(new YupValidationPipe(registrationSchema))
     userRegisterDto: UserRegisterDto,
-    // @UploadedFile() file: IFile,
   ): Promise<UserAuthResponseDto> {
     return this.authService.registration(userRegisterDto);
   }
 
   @Get('me')
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'User info' })
-  @Auth([RoleType.USER, RoleType.ADMIN])
+  @Auth([RoleType.USER, RoleType.ADMIN], 'User info')
   @ApiOkResponse({ type: UserDto, description: 'current user info' })
   getCurrentUser(@AuthUser() user: UserEntity): UserDto {
     return user.toDto();
